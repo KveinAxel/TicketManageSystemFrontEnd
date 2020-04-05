@@ -1,26 +1,24 @@
 <template>
-  <div class="app-container">
-  </div>
+    <div class="app-container">
+    </div>
 </template>
 
 <script>
-  export default {
-    name: 'home',
-    data() {
-      return {
-      }
-    },
-    created(){
-    },
-    methods:{
+    export default {
+        name: 'home',
+        data() {
+            return {}
+        },
+        created() {
+        },
+        methods: {}
     }
-  }
 </script>
 
 <style scoped>
-  .app-container {
-    margin-top: 40px;
-    margin-left: 120px;
-    margin-right: 120px;
-  }
+    .app-container {
+        margin-top: 40px;
+        margin-left: 120px;
+        margin-right: 120px;
+    }
 </style>
