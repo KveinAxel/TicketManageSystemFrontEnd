@@ -19,11 +19,10 @@ export function ticketDelete(params) {
 }
 
 // 航班信息
-export function ticketList(params) {
+export function ticketList() {
     return request({
         url: '/ticket/list',
         method: 'get',
-        params: params
     })
 }
 
@@ -67,6 +66,24 @@ export function ticketCancel(params) {
 export function ticketRecommend(params) {
     return request({
         url: '/ticket/recommend',
+        method: 'get',
+        params: params
+    })
+}
+
+// 相似航班推荐
+export function ticketSameRecommend(params) {
+    return request({
+        url: '/ticket/sameRecommend',
+        method: 'get',
+        params: params
+    })
+}
+
+// 向购票用户发送信息
+export function ticketSendMessage(params) {
+    return request({
+        url: '/ticket/sendMessage',
         method: 'get',
         params: params
     })
