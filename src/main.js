@@ -9,7 +9,6 @@ import VCharts from 'v-charts'
 import '@/styles/index.scss' // global css
 import App from './App'
 import router from './router'
-import store from './store'
 
 import '@/icons' // icon
 import '@/permission' // permission control
@@ -22,7 +21,6 @@ Vue.config.productionTip = false;
 new Vue({
     el: '#app',
     router,
-    store,
     template: '<App/>',
     components: {App}
 });
