@@ -44,11 +44,29 @@ export function userCancelTicket(params) {
     })
 }
 
+
+// 用户预订机票
+export function userAppointment(params) {
+    return request({
+        url: '/user/appointment',
+        method: 'get',
+        params: params
+    })
+}
+
 // 用户取消预定
 export function userCancelAppointment(params) {
     return request({
         url: '/user/cancelAppointment',
         method: 'get',
         params: params
+    })
+}
+
+// 获取消息
+export function userMessageBox() {
+    return request({
+        url: '/user/messageBox',
+        method: 'get',
     })
 }
