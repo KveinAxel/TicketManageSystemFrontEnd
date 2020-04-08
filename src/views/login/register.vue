@@ -9,16 +9,16 @@
                 <div style="text-align: center">
                     <svg-icon icon-class="login" style="width: 56px;height: 56px;color: #409EFF"></svg-icon>
                 </div>
-                <h2 class="login-title color-main">KASaleSystem</h2>
+                <h2 class="login-title color-main">TicketManageSystem</h2>
                 <el-form-item prop="username">
                     <el-input name="username"
                               type="text"
                               v-model="registerForm.username"
                               autoComplete="on"
                               placeholder="请输入用户名">
-          <span slot="prefix">
-            <svg-icon icon-class="user" class="color-main"></svg-icon>
-          </span>
+                        <span slot="prefix">
+                            <svg-icon icon-class="user" class="color-main"></svg-icon>
+                        </span>
                     </el-input>
                 </el-form-item>
                 <el-form-item prop="password">
@@ -27,12 +27,12 @@
                               v-model="registerForm.password"
                               autoComplete="on"
                               placeholder="请输入密码">
-          <span slot="prefix">
-            <svg-icon icon-class="password" class="color-main"></svg-icon>
-          </span>
+                        <span slot="prefix">
+                            <svg-icon icon-class="password" class="color-main"></svg-icon>
+                        </span>
                         <span slot="suffix" @click="showPwd">
-            <svg-icon icon-class="eye" class="color-main"></svg-icon>
-          </span>
+                            <svg-icon icon-class="eye" class="color-main"></svg-icon>
+                        </span>
                     </el-input>
                 </el-form-item>
                 <el-form-item prop="confirmPassword">
@@ -41,13 +41,19 @@
                               v-model="registerForm.confirmPassword"
                               autoComplete="on"
                               placeholder="请输入确认密码">
-          <span slot="prefix">
-            <svg-icon icon-class="password" class="color-main"></svg-icon>
-          </span>
+                        <span slot="prefix">
+                            <svg-icon icon-class="password" class="color-main"></svg-icon>
+                        </span>
                         <span slot="suffix" @click="showPwd">
-            <svg-icon icon-class="eye" class="color-main"></svg-icon>
-          </span>
+                            <svg-icon icon-class="eye" class="color-main"></svg-icon>
+                        </span>
                     </el-input>
+                </el-form-item>
+                <el-form-item label="登录方式">
+                    <el-radio-group v-model="registerForm.admin">
+                        <el-radio label="admin"></el-radio>
+                        <el-radio label="normal"></el-radio>
+                    </el-radio-group>
                 </el-form-item>
                 <el-form-item style="margin-bottom: 60px;text-align: center">
                     <el-button style="width: 45%" type="primary" :loading="loading"
@@ -96,9 +102,8 @@
                     username: '',
                     password: '',
                     confirmPassword: '',
+                    admin: '',
                 },
-                captcha: null,
-                hasCaptcha: false,
                 registerRules: {
                     username: [{required: true, trigger: 'blur', validator: validateUsername}],
                     password: [{required: true, trigger: 'blur', validator: validatePass}],
@@ -106,8 +111,6 @@
                 },
                 loading: false,
                 pwdType: 'password',
-                phoneType: 'text',
-                captchaType: 'text',
             }
         },
         methods: {
@@ -122,12 +125,11 @@
                 this.$refs.registerForm.validate(valid => {
                     if (valid) {
                         this.loading = true;
-                        if (this.registerForm.password === this.registerForm.password) {
+                        if (this.registerForm.password === this.registerForm.confirmPassword) {
                             let params = new URLSearchParams();
                             params.append('username', this.registerForm.username);
                             params.append('password', this.registerForm.password);
-                            params.append('telephone', this.registerForm.phone);
-                            params.append('authCode', this.registerForm.captcha);
+                            params.append('admin', this.registerForm.admin);
                             register(params).then(response => {
                                 this.$message(response.message);
                             });

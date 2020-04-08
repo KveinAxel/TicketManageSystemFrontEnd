@@ -16,9 +16,9 @@
                               v-model="loginForm.username"
                               autoComplete="on"
                               placeholder="请输入用户名">
-          <span slot="prefix">
-            <svg-icon icon-class="user" class="color-main"></svg-icon>
-          </span>
+                        <span slot="prefix">
+                            <svg-icon icon-class="user" class="color-main"></svg-icon>
+                        </span>
                     </el-input>
                 </el-form-item>
                 <el-form-item prop="password">
@@ -28,18 +28,28 @@
                               v-model="loginForm.password"
                               autoComplete="on"
                               placeholder="请输入密码">
-          <span slot="prefix">
-            <svg-icon icon-class="password" class="color-main"></svg-icon>
-          </span>
+                        <span slot="prefix">
+                            <svg-icon icon-class="password" class="color-main"></svg-icon>
+                        </span>
                         <span slot="suffix" @click="showPwd">
-            <svg-icon icon-class="eye" class="color-main"></svg-icon>
-          </span>
+                            <svg-icon icon-class="eye" class="color-main"></svg-icon>
+                        </span>
+                        <el-form-item label="登录方式">
+                            <el-radio-group v-model="loginForm.admin">
+                                <el-radio label="admin"></el-radio>
+                                <el-radio label="normal"></el-radio>
+                            </el-radio-group>
+                        </el-form-item>
                     </el-input>
                 </el-form-item>
                 <el-form-item style="margin-bottom: 60px;text-align: center">
                     <el-button style="width: 45%" type="primary" :loading="loading" @click.native.prevent="handleLogin">
                         登录
                     </el-button>
+                    <el-button style="width: 45%" :loading="loading" @click="handleRegister">
+                        注册
+                    </el-button>
+
                 </el-form-item>
             </el-form>
         </el-card>
@@ -48,7 +58,6 @@
 
 <script>
     import {isvalidUsername} from '@/utils/validate';
-    import {setCookie} from '@/utils/support';
     import login_center_bg from '@/assets/images/login_center_bg.png'
 
     export default {
@@ -72,6 +81,7 @@
                 loginForm: {
                     username: '',
                     password: '',
+                    admin: '',
                 },
                 loginRules: {
                     username: [{required: true, trigger: 'blur', validator: validateUsername}],
@@ -98,8 +108,6 @@
                         this.loading = true;
                         this.$store.dispatch('Login', this.loginForm).then(() => {
                             this.loading = false;
-                            setCookie("username", this.loginForm.username, 15);
-                            setCookie("password", this.loginForm.password, 15);
                             this.$router.push({path: '/'})
                         }).catch(() => {
                             this.loading = false
@@ -110,6 +118,9 @@
                     }
                 })
             },
+            handleRegister() {
+                this.$router.push({path: '/register'})
+            }
         }
     }
 </script>
