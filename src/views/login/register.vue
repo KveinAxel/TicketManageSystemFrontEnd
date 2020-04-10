@@ -5,6 +5,7 @@
                      :model="registerForm"
                      :rules="registerRules"
                      ref="registerForm"
+                     style="margin: auto 20px"
                      label-position="left">
                 <div style="text-align: center">
                     <svg-icon icon-class="login" style="width: 56px;height: 56px;color: #409EFF"></svg-icon>
@@ -49,13 +50,13 @@
                         </span>
                     </el-input>
                 </el-form-item>
-                <el-form-item label="登录方式">
+                <el-form-item label="登录方式" required>
                     <el-radio-group v-model="registerForm.admin">
                         <el-radio label="admin"></el-radio>
-                        <el-radio label="normal"></el-radio>
+                        <el-radio label="user"></el-radio>
                     </el-radio-group>
                 </el-form-item>
-                <el-form-item style="margin-bottom: 60px;text-align: center">
+                <el-form-item style="margin-bottom: 40px;text-align: center">
                     <el-button style="width: 45%" type="primary" :loading="loading"
                                @click.native.prevent="handleRegister">
                         注册
@@ -153,7 +154,7 @@
         left: 0;
         right: 0;
         width: 360px;
-        margin: 140px auto;
+        margin: 100px auto;
         border-top: 10px solid #409EFF;
     }
 

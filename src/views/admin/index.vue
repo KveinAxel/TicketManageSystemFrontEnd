@@ -1,6 +1,6 @@
 <template>
-    <div class="app-container">
-        <el-card class="filter-container" shadow="never">
+    <div class="app-container" style="margin-top: 0">
+        <el-card class="filter-container" shadow="never" style="margin-top: 0">
             <div>
                 <i class="el-icon-search"></i>
                 <span>筛选搜索</span>
@@ -18,16 +18,17 @@
                     重置
                 </el-button>
             </div>
-            <div style="margin-top: 15px">
-                <el-form :inline="true" :model="searchQuery" size="small" label-width="140px">
+            <div style="margin-top: 30px">
+                <el-form :inline="true" :model="searchQuery" size="small" label-width="100px">
                     <el-form-item label="航班号：">
-                        <el-input style="width: 203px" v-model="searchQuery.flight_number" placeholder="航班号"></el-input>
+                        <el-input style="width: 180px" v-model="searchQuery.flight_number" placeholder="航班号"></el-input>
                     </el-form-item>
                     <el-form-item label="起飞时间：">
                         <el-date-picker
                                 v-model="searchQuery.begin_time"
                                 type="datetime"
                                 align="right"
+                                style="width: 180px"
                                 placeholder="选择起飞时间"
                                 :picker-options="pickerOptions">
                         </el-date-picker>
@@ -37,29 +38,23 @@
                                 v-model="searchQuery.end_time"
                                 type="datetime"
                                 align="right"
+                                style="width: 180px"
                                 placeholder="选择降落时间"
                                 :picker-options="pickerOptions">
                         </el-date-picker>
                     </el-form-item>
                     <el-form-item label="起飞地点：">
-                        <el-input style="width: 203px" v-model="searchQuery.begin_place" placeholder="起飞地点"></el-input>
+                        <el-input style="width: 180px" v-model="searchQuery.begin_place" placeholder="起飞地点"></el-input>
                     </el-form-item>
                     <el-form-item label="降落地点：">
-                        <el-input style="width: 203px" v-model="searchQuery.end_place" placeholder="降落地点"></el-input>
+                        <el-input style="width: 180px" v-model="searchQuery.end_place" placeholder="降落地点"></el-input>
                     </el-form-item>
                     <el-form-item label="最高票价：">
-                        <el-input style="width: 203px" v-model="searchQuery.under_price" placeholder="最高票价"></el-input>
-                    </el-form-item>
-                    <el-form-item label="是否有余票：">
-                        <template>
-                            <el-radio v-model="searchQuery.has_remain" label=true>有余票</el-radio>
-                            <el-radio v-model="searchQuery.has_remain" label=false>无余票</el-radio>
-                        </template>
-                        <el-input style="width: 203px" v-model="searchQuery.has_remain" placeholder="航班号"></el-input>
+                        <el-input style="width: 180px" v-model="searchQuery.under_price" placeholder="最高票价"></el-input>
                     </el-form-item>
                     <el-form-item label="排序方式：">
                         <template>
-                            <el-select v-model="searchQuery.key" clearable placeholder="请选择排序方式">
+                            <el-select v-model="searchQuery.key" style="width: 180px" clearable placeholder="请选择排序方式">
                                 <el-option
                                         v-for="item in keyOptions"
                                         :key="item.value"
@@ -68,14 +63,12 @@
                                 </el-option>
                             </el-select>
                         </template>
-                        <el-input style="width: 203px" v-model="searchQuery.key" placeholder="航班号"></el-input>
                     </el-form-item>
-                    <el-form-item label="是否升序：">
-                        <template>
-                            <el-radio v-model="searchQuery.is_asc" label=true>升序</el-radio>
-                            <el-radio v-model="searchQuery.is_asc" label=false>降序</el-radio>
-                        </template>
-                        <el-input style="width: 203px" v-model="searchQuery.is_asc" placeholder="航班号"></el-input>
+                    <el-form-item label="有余票：">
+                        <el-switch style="width: 40px" v-model="searchQuery.has_remain"></el-switch>
+                    </el-form-item>
+                    <el-form-item label="升序：" label-width="80px">
+                        <el-switch style="width: 40px" v-model="searchQuery.is_asc"></el-switch>
                     </el-form-item>
                 </el-form>
             </div>
@@ -85,6 +78,7 @@
             <span>航班列表</span>
             <el-button
                     class="btn-add"
+                    type="primary"
                     @click="handleAddTicket()"
                     size="mini">
                 添加航班
@@ -97,7 +91,7 @@
                       style="width: 100%"
                       v-loading="listLoading"
                       border>
-                <el-table-column label="id" width="100" align="center">
+                <el-table-column label="id" width="40" align="center">
                     <template slot-scope="scope">{{scope.row.id}}</template>
                 </el-table-column>
                 <el-table-column label="航班号" width="100" align="center">
@@ -107,14 +101,14 @@
                         <span v-show="scope.row.show">{{scope.row.flight_number}}</span>
                     </template>
                 </el-table-column>
-                <el-table-column label="起飞地点" width="120" align="center">
+                <el-table-column label="起飞地点" width="100" align="center">
                     <template slot-scope="scope">
                         <el-input placeholder="请输入内容" v-show="!scope.row.show"
                                   v-model="editTicketInfo.begin_place"></el-input>
                         <span v-show="scope.row.show">{{scope.row.begin_place}}</span>
                     </template>
                 </el-table-column>
-                <el-table-column label="起飞时间" width="120" align="center">
+                <el-table-column label="起飞时间" width="160" align="center">
                     <template slot-scope="scope">
                         <el-date-picker
                                 v-show="!scope.row.show"
@@ -123,17 +117,17 @@
                                 placeholder="选择日期时间"
                                 :picker-options="pickerOptions">
                         </el-date-picker>
-                        <span v-show="scope.row.show">{{scope.row.begin_time}}</span>
+                        <span v-show="scope.row.show">{{scope.row.begin_time | formatTime}}</span>
                     </template>
                 </el-table-column>
-                <el-table-column label="降落地点" width="120" align="center">
+                <el-table-column label="降落地点" width="100" align="center">
                     <template slot-scope="scope">
                         <el-input placeholder="请输入内容" v-show="!scope.row.show"
                                   v-model="editTicketInfo.end_place"></el-input>
                         <span v-show="scope.row.show">{{scope.row.end_place}}</span>
                     </template>
                 </el-table-column>
-                <el-table-column label="降落时间" width="120" align="center">
+                <el-table-column label="降落时间" width="160" align="center">
                     <template slot-scope="scope">
                         <el-date-picker
                                 v-show="!scope.row.show"
@@ -143,43 +137,44 @@
                                 align="right"
                                 :picker-options="pickerOptions">
                         </el-date-picker>
-                        <span v-show="scope.row.show">{{scope.row.end_time}}</span>
+                        <span v-show="scope.row.show">{{scope.row.end_time | formatTime}}</span>
                     </template>
                 </el-table-column>
-                <el-table-column label="总票数" width="120" align="center">
+                <el-table-column label="总票数" width="100" align="center">
                     <template slot-scope="scope">
                         <el-input placeholder="请输入内容" v-show="!scope.row.show"
                                   v-model="editTicketInfo.tickets"></el-input>
                         <span v-show="scope.row.show">{{scope.row.tickets}}</span>
                     </template>
                 </el-table-column>
-                <el-table-column label="余票" width="120" align="center">
+                <el-table-column label="余票" width="100" align="center">
                     <template slot-scope="scope">
                         <el-input placeholder="请输入内容" v-show="!scope.row.show"
                                   v-model="editTicketInfo.remain"></el-input>
                         <span v-show="scope.row.show">{{scope.row.remain}}</span>
                     </template>
                 </el-table-column>
-                <el-table-column label="是否有效" width="120" align="center">
+                <el-table-column label="有效" width="60" align="center">
                     <template slot-scope="scope">
                         <el-input placeholder="请输入内容" v-show="!scope.row.show"
                                   v-model="editTicketInfo.valid"></el-input>
                         <span v-show="scope.row.show">{{scope.row.valid}}</span>
                     </template>
                 </el-table-column>
-                <el-table-column label="票价" width="120" align="center">
+                <el-table-column label="票价" width="100" align="center">
                     <template slot-scope="scope">
                         <el-input placeholder="请输入内容" v-show="!scope.row.show"
                                   v-model="editTicketInfo.price"></el-input>
                         <span v-show="scope.row.show">{{scope.row.price}}</span>
                     </template>
                 </el-table-column>
-                <el-table-column label="操作" width="220" align="center">
+                <el-table-column label="操作" align="center">
                     <template slot-scope="scope">
                         <p>
                             <el-button
                                     v-show="scope.row.show"
                                     size="mini"
+                                    type="primary"
                                     @click="handleEdit(scope.$index, scope.row)">编辑
                             </el-button>
                             <el-button
@@ -194,14 +189,18 @@
                                     type="danger"
                                     @click="handleDelete(scope.$index, scope.row)">删除
                             </el-button>
+                        </p>
+                        <p>
                             <el-button
                                     v-show="scope.row.show"
                                     size="mini"
+                                    type="info"
                                     @click="handleEditFlyBy(scope.$index, scope.row)">经停
                             </el-button>
                             <el-button
                                     v-show="scope.row.show"
                                     size="mini"
+                                    type="primary"
                                     @click="handleSendMessage(scope.row.id, '')">广播
                             </el-button>
                             <el-button
@@ -212,6 +211,7 @@
                             <el-button
                                     v-show="!scope.row.show"
                                     size="mini"
+                                    type="primary"
                                     @click="handleEditConfirm(scope.$index, scope.row)">完成
                             </el-button>
                         </p>
@@ -219,100 +219,110 @@
                 </el-table-column>
             </el-table>
         </div>
-    </div>
-    <el-dialog
-            title="添加航班"
-            :visible.sync="addTicketInfo.dialogVisible"
-            width="40%">
-        <el-form :inline="true" rules="rules" style="width: 100%;margin-top: 20px" :model="addTicketInfo" size="small"
-                 label-width="140px">
-            <el-form-item label="航班号：" prop="flight_number">
-                <el-input v-model="addTicketInfo.flight_number" placeholder="航班号"></el-input>
-            </el-form-item>
-            <el-form-item label="航空公司：" prop="airline">
-                <el-input v-model="addTicketInfo.airline" placeholder="航空公司"></el-input>
-            </el-form-item>
-            <el-form-item label="起飞地点：" prop="begin_place">
-                <el-input v-model="addTicketInfo.begin_place" placeholder="起飞地点"></el-input>
-            </el-form-item>
-            <el-form-item label="起飞时间：" required>
-                <el-date-picker
-                        type="datetime"
-                        placeholder="选择日期时间"
-                        v-model="addTicketInfo.begin_time"
-                        align="right"
-                        :picker-options="pickerOptions">
-                </el-date-picker>
-            </el-form-item>
-            <el-form-item label="降落地点：" prop="end_place">
-                <el-input v-model="addTicketInfo.end_place" placeholder="降落地点"></el-input>
-            </el-form-item>
-            <el-form-item label="降落时间：" required>
-                <el-date-picker
-                        type="datetime"
-                        placeholder="选择日期时间"
-                        v-model="addTicketInfo.end_time"
-                        align="right"
-                        :picker-options="pickerOptions">
-                </el-date-picker>
-            </el-form-item>
-            <el-form-item label="总票量：" prop="tickets">
-                <el-input v-model="addTicketInfo.tickets" placeholder="总票量"></el-input>
-            </el-form-item>
-            <el-form-item label="票价：" prop="price">
-                <el-input v-model="addTicketInfo.price" placeholder="票价"></el-input>
-            </el-form-item>
-        </el-form>
-        <span slot="footer" class="dialog-footer">
+        <el-dialog
+                title="添加航班"
+                :visible.sync="addTicketInfo.dialogVisible"
+                width="40%">
+            <el-form :inline="true" :rules="rules" style="width: 100%;margin-top: 20px" :model="addTicketInfo"
+                     size="small"
+                     label-width="140px">
+                <el-form-item label="航班号：" prop="flight_number">
+                    <el-input v-model="addTicketInfo.flight_number" placeholder="航班号"></el-input>
+                </el-form-item>
+                <el-form-item label="航空公司：" prop="airline">
+                    <el-input v-model="addTicketInfo.airline" placeholder="航空公司"></el-input>
+                </el-form-item>
+                <el-form-item label="起飞地点：" prop="begin_place">
+                    <el-input v-model="addTicketInfo.begin_place" placeholder="起飞地点"></el-input>
+                </el-form-item>
+                <el-form-item label="起飞时间：" required>
+                    <el-date-picker
+                            type="datetime"
+                            placeholder="选择日期时间"
+                            v-model="addTicketInfo.begin_time"
+                            align="right"
+                            :picker-options="pickerOptions">
+                    </el-date-picker>
+                </el-form-item>
+                <el-form-item label="降落地点：" prop="end_place">
+                    <el-input v-model="addTicketInfo.end_place" placeholder="降落地点"></el-input>
+                </el-form-item>
+                <el-form-item label="降落时间：" required>
+                    <el-date-picker
+                            type="datetime"
+                            placeholder="选择日期时间"
+                            v-model="addTicketInfo.end_time"
+                            align="right"
+                            :picker-options="pickerOptions">
+                    </el-date-picker>
+                </el-form-item>
+                <el-form-item label="总票量：" prop="tickets">
+                    <el-input v-model="addTicketInfo.tickets" placeholder="总票量"></el-input>
+                </el-form-item>
+                <el-form-item label="票价：" prop="price">
+                    <el-input v-model="addTicketInfo.price" placeholder="票价"></el-input>
+                </el-form-item>
+            </el-form>
+            <span slot="footer" class="dialog-footer">
             <el-button @click="handleAddFlyBy()">添加经停</el-button>
             <el-button @click="addTicketInfo.dialogVisible = false">取 消</el-button>
             <el-button type="primary" @click="handleAddTicketConfirm()">确 定</el-button>
         </span>
-    </el-dialog>
-    <el-dialog
-            title="经停"
-            :visible.sync="flyByInfo.dialogVisible"
-            width="40%">
-        <span>航班号：</span>
-        <span>{{flyByInfo.flight_number}}</span>
-        <el-table stripe :data="flyByInfo.list" border>
-            <el-table-column label="经停地点">
-                <template slot-scope="scope">
-                    <el-input placeholder="请输入内容" v-show="!scope.row.show" v-model="scope.row.fly_by_place"></el-input>
-                    <span v-show="scope.row.show">{{scope.row.fly_by_place}}</span>
-                </template>
-            </el-table-column>
-            <el-table-column label="经停时间">
-                <template slot-scope="scope">
-                    <el-date-picker
-                            v-show="!scope.row.show"
-                            type="datetime"
-                            placeholder="选择日期时间"
-                            v-model="scope.row.fly_by_time"
-                            align="right"
-                            :picker-options="pickerOptions">
-                    </el-date-picker>
-                    <span v-show="scope.row.show">{{scope.row.fly_by_time}}</span>
-                </template>
-            </el-table-column>
-            <el-table-column label="操作">
-                <template slot-scope="scope">
-                    <el-button v-show="scope.row.show" @click="scope.row.show = false">编辑</el-button>
-                    <el-button v-show="!scope.row.show" @click="scope.row.show = true">保存</el-button>
-                    <el-button @click="handleDeleteFlyByItem(scope.$index)">删除</el-button>
-                </template>
-            </el-table-column>
-        </el-table>
-        <span slot="footer" class="dialog-footer">
+        </el-dialog>
+        <el-dialog
+                title="经停"
+                :visible.sync="flyByInfo.dialogVisible"
+                width="50%">
+            <span>航班号：</span>
+            <span>{{flyByInfo.flight_number}}</span>
+            <el-table stripe :data="flyByInfo.list" border>
+                <el-table-column label="经停地点" align="center">
+                    <template slot-scope="scope">
+                        <el-input placeholder="请输入内容" v-show="!scope.row.show"
+                                  v-model="scope.row.fly_by_place"></el-input>
+                        <span v-show="scope.row.show">{{scope.row.fly_by_place}}</span>
+                    </template>
+                </el-table-column>
+                <el-table-column label="经停时间" align="center">
+                    <template slot-scope="scope">
+                        <el-date-picker
+                                v-show="!scope.row.show"
+                                type="datetime"
+                                placeholder="选择日期时间"
+                                v-model="scope.row.fly_by_time"
+                                align="right"
+                                :picker-options="pickerOptions">
+                        </el-date-picker>
+                        <span v-show="scope.row.show">{{scope.row.fly_by_time | formatTime}}</span>
+                    </template>
+                </el-table-column>
+                <el-table-column label="操作" align="center">
+                    <template slot-scope="scope">
+                        <el-button @click="handleDeleteFlyByItem(scope.$index)">删除</el-button>
+                    </template>
+                </el-table-column>
+            </el-table>
+            <span slot="footer" class="dialog-footer">
             <el-button @click="handleAddFlyByItem()">添加行</el-button>
             <el-button @click="handleCancelEditFlyBy()">取 消</el-button>
             <el-button type="primary" @click="handleEditFlyByConfirm()">确 定</el-button>
         </span>
-    </el-dialog>
+        </el-dialog>
+    </div>
 </template>
 
 <script>
-    import {ticketCancel, ticketCreate, ticketDelete, ticketList, ticketSendMessage, ticketUpdate, ticketSameRecommend, ticketSearch} from "@/api/ticket";
+    import {
+        ticketCancel,
+        ticketCreate,
+        ticketDelete,
+        ticketList,
+        ticketSameRecommend,
+        ticketSearch,
+        ticketSendMessage,
+        ticketUpdate
+    } from "@/api/ticket";
+    import {formatDate} from '@/utils/date';
 
     export default {
         name: "adminView",
@@ -335,17 +345,17 @@
                             picker.$emit('pick', new Date());
                         }
                     }, {
-                        text: '昨天',
+                        text: '明天',
                         onClick(picker) {
                             const date = new Date();
-                            date.setTime(date.getTime() - 3600 * 1000 * 24);
+                            date.setTime(date.getTime() + 3600 * 1000 * 24);
                             picker.$emit('pick', date);
                         }
                     }, {
-                        text: '一周前',
+                        text: '一周后',
                         onClick(picker) {
                             const date = new Date();
-                            date.setTime(date.getTime() - 3600 * 1000 * 24 * 7);
+                            date.setTime(date.getTime() + 3600 * 1000 * 24 * 7);
                             picker.$emit('pick', date);
                         }
                     }]
@@ -395,7 +405,7 @@
                     begin_time: 0,
                     end_place: '',
                     end_time: 0,
-                    fly_by: '',
+                    fly_by: '[]',
                     tickets: 0,
                     price: 0,
                     remain: 0,
@@ -411,7 +421,7 @@
                     begin_time: 0,
                     end_place: '',
                     end_time: 0,
-                    fly_by: '',
+                    fly_by: '[]',
                     tickets: 0,
                     price: 0,
                     remain: 0,
@@ -425,24 +435,24 @@
                     flight_number: '',
                     airline: '',
                     begin_place: '',
-                    begin_time: 0,
+                    begin_time: null,
                     end_place: '',
-                    end_time: 0,
-                    fly_by: '',
-                    tickets: 0,
-                    price: 0,
+                    end_time: null,
+                    fly_by: '[]',
+                    tickets: null,
+                    price: null,
                 },
                 addTicketInfo: {
                     dialogVisible: false,
                     flight_number: '',
                     airline: '',
                     begin_place: '',
-                    begin_time: 0,
+                    begin_time: null,
                     end_place: '',
-                    end_time: 0,
-                    fly_by: '',
-                    tickets: 0,
-                    price: 0,
+                    end_time: null,
+                    fly_by: '[]',
+                    tickets: null,
+                    price: null,
                 },
                 rules: {
                     flight_number: [
@@ -452,10 +462,12 @@
                     airline: [{required: true, message: '请输入航空公司', trigger: 'blur'}],
                     begin_place: [{required: true, message: '请输入起飞地点', trigger: 'blur'}],
                     end_place: [{required: true, message: '请输入降落地点', trigger: 'blur'}],
-                    tickets: [{required: true, message: '请输入总票量', trigger: 'blur'}],
-                    price: [{required: true, message: '请输入票价', trigger: 'blur'}],
+                    tickets: [{required: true, message: '请输入总票量', trigger: 'blur'},
+                        { type: 'number', message: '总票量必须为数字值'}],
+                    price: [{required: true, message: '请输入票价', trigger: 'blur'},
+                        { type: 'number', message: '价格必须为数字值'}],
                 },
-                listLoading: true,
+                listLoading: false,
             }
         },
         created() {
@@ -464,15 +476,15 @@
         methods: {
             getList() {
                 this.listLoading = true;
-                ticketList.then(response => {
+                ticketList().then(response => {
                     this.listLoading = false;
-                    this.list = JSON.parse(response.message);
+                    this.list = JSON.parse(response.data);
                     if (Array.isArray(this.list)) {
                         let len = this.list.length;
                         for (let i = 0; i < len; i++) {
                             this.list[i].show = true;
-                            this.list[i].begin_time = new Date(this.begin_time * 1000);
-                            this.list[i].end_time = new Date(this.end_time * 1000);
+                            this.list[i].begin_time = new Date(this.list[i].begin_time * 1000);
+                            this.list[i].end_time = new Date(this.list[i].end_time * 1000);
                         }
                     } else {
                         console.log('getList res is not array');
@@ -496,7 +508,13 @@
                         }
                     }
                     ticketSearch(params).then(response => {
-                        this.list = JSON.parse(response.message);
+                        this.list = JSON.parse(response.data);
+                        let len = this.list.length;
+                        for (let i = 0; i < len; i++) {
+                            this.list[i].show = true;
+                            this.list[i].begin_time = new Date(this.list[i].begin_time * 1000);
+                            this.list[i].end_time = new Date(this.list[i].end_time * 1000);
+                        }
                     });
                     this.searchQuery = this.defaultSearchQuery;
                 })
@@ -533,7 +551,7 @@
                     type: 'warning'
                 }).then(() => {
                     let params = new URLSearchParams();
-                    params.append('id', this.editTicketInfo.id);
+                    params.append('ticket_id', this.editTicketInfo.id);
                     params.append('flight_number', this.editTicketInfo.flight_number);
                     params.append('airline', this.editTicketInfo.airline);
                     params.append('begin_place', this.editTicketInfo.begin_place);
@@ -564,7 +582,7 @@
                         }).then(() => {
                             this.handleSendMessage(row.id, '亲爱的乘客您好，不幸地告诉您，您的航班号为' + row.flight_number + '的航班发生延误，请及时查询航班信息变动，避免不必要的损失')
                         });
-                        this.$router.push({path: '/admin'});
+                        this.getList();
                     });
                 })
             },
@@ -580,7 +598,7 @@
                         type: 'warning'
                     }).then(() => {
                         let params = new URLSearchParams();
-                        params.append('id', row.id);
+                        params.append('ticket_id', row.id);
                         ticketCancel(params).then(response => {
                             this.$message({
                                 message: response.message,
@@ -592,15 +610,17 @@
                                 cancelButtonText: '否',
                                 type: 'warning'
                             }).then(() => {
-                                ticketSameRecommend(row.id).then(response => {
+                                let params = new URLSearchParams();
+                                params.append('ticket_id', row.id);
+                                ticketSameRecommend(params).then(response => {
                                     let msg = '亲爱的乘客您好，不幸地告诉您，您的航班号为' + row.flight_number + '的航班已被取消，请及时查询航班信息变动，避免不必要的损失';
-                                    if (response.message !== '') {
-                                        msg += '\n我们推荐您改乘航班：' + response.message;
+                                    if (response.hasOwnProperty('data')) {
+                                        msg += '\n我们推荐您改乘航班：' + response.data;
                                     }
                                     this.handleSendMessage(row.id, msg)
                                 });
                             });
-                            this.$router.push({path: '/admin'});
+                            this.getList();
                         });
                     });
                 })
@@ -612,14 +632,14 @@
                     type: 'warning'
                 }).then(() => {
                     let params = new URLSearchParams();
-                    params.append('id', row.id);
+                    params.append('ticket_id', row.id);
                     ticketDelete(params).then(response => {
                         this.$message({
                             message: response.message,
                             type: 'success',
                             duration: 1000
                         });
-                        this.$router.push({path: '/admin'});
+                        this.getList();
                     });
                 });
             },
@@ -633,9 +653,9 @@
                     params.append('flight_number', this.addTicketInfo.flight_number);
                     params.append('airline', this.addTicketInfo.airline);
                     params.append('begin_place', this.addTicketInfo.begin_place);
-                    params.append('begin_time', this.addTicketInfo.begin_time.getTime());
+                    params.append('begin_time', `${this.addTicketInfo.begin_time.getTime() / 1000}`);
                     params.append('end_place', this.addTicketInfo.end_place);
-                    params.append('end_time', this.addTicketInfo.end_time.getTime());
+                    params.append('end_time', `${this.addTicketInfo.end_time.getTime() / 1000}`);
                     params.append('fly_by', this.addTicketInfo.fly_by);
                     params.append('tickets', this.addTicketInfo.tickets);
                     params.append('price', this.addTicketInfo.price);
@@ -646,7 +666,7 @@
                             duration: 1000,
                         });
                         this.addTicketInfo = Object.assign({}, this.defaultAddTicketInfo);
-                        this.$router.push({path: '/admin'})
+                        this.getList();
                     });
                 });
             },
@@ -686,13 +706,13 @@
                     } else {
                         this.editTicketInfo.fly_by = JSON.stringify(timestamp_list);
                         let params = new URLSearchParams();
-                        params.append('id', this.editTicketInfo.id);
+                        params.append('ticket_id', this.editTicketInfo.id);
                         params.append('flight_number', this.editTicketInfo.flight_number);
                         params.append('airline', this.editTicketInfo.airline);
                         params.append('begin_place', this.editTicketInfo.begin_place);
-                        params.append('begin_time', this.editTicketInfo.begin_time.getTime());
+                        params.append('begin_time', `${this.editTicketInfo.begin_time.getTime() / 1000}`);
                         params.append('end_place', this.editTicketInfo.end_place);
-                        params.append('end_time', this.editTicketInfo.end_time.getTime());
+                        params.append('end_time', `${this.editTicketInfo.end_time.getTime() / 1000}`);
                         params.append('fly_by', this.editTicketInfo.fly_by);
                         params.append('tickets', this.editTicketInfo.tickets);
                         params.append('price', this.editTicketInfo.price);
@@ -708,17 +728,24 @@
                                 duration: 1000,
                             });
                             this.edit = false;
-                            this.editTicketInfo = Object.assign({}, this.defaultEditTicketInfo);
                             this.$confirm('是否需要向该航班客户广播延误通知？', '提示', {
                                 confirmButtonText: '是',
                                 cancelButtonText: '否',
                                 type: 'warning'
                             }).then(() => {
-                                this.handleSendMessage(this.editTicketInfo.id, '亲爱的乘客您好，不幸地告诉您，您的航班号为' + this.editTicketInfo.flight_number + '的航班发生延误，请及时查询航班信息变动，避免不必要的损失')
+                                let msg = '亲爱的乘客您好，不幸地告诉您，您的航班号为' +
+                                  this.editTicketInfo.flight_number +
+                                  '的航班发生延误，请及时查询航班信息变动，避免不必要的损失';
+                                this.handleSendMessage(this.editTicketInfo.id, msg);
+                                this.editTicketInfo = Object.assign({}, this.defaultEditTicketInfo);
+                                this.flyByInfo = Object.assign({}, this.defaultFlyByInfo);
+                                this.getList();
+                            }).catch(() => {
+                                this.editTicketInfo = Object.assign({}, this.defaultEditTicketInfo);
+                                this.flyByInfo = Object.assign({}, this.defaultFlyByInfo);
+                                this.getList();
                             });
-                            this.editTicketInfo = Object.assign({}, this.defaultEditTicketInfo);
-                            this.flyByInfo = Object.assign({}, this.defaultFlyByInfo);
-                            this.$router.push({path: '/admin'});
+
                         });
                     }
                 });
@@ -746,12 +773,24 @@
                 }).then(({value}) => {
                     let params = new URLSearchParams();
                     params.append('ticket_id', ticket_id);
-                    if (value !== '') {
+                    if (value !== null) {
                         params.append('msg', value);
-                        ticketSendMessage(params);
+                        ticketSendMessage(params).then(response => {
+                            this.$message({
+                                message: response.message,
+                                type: 'success',
+                                duration: 1000,
+                            })
+                        });
                     } else if (msg !== '') {
                         params.append('msg', msg);
-                        ticketSendMessage(params);
+                        ticketSendMessage(params).then(response => {
+                            this.$message({
+                                message: response.message,
+                                type: 'success',
+                                duration: 1000,
+                            })
+                        });
                     } else {
                         this.$message({
                             message: '输入的消息为空',
@@ -760,7 +799,19 @@
                     }
                 });
             },
+        },
+        filters: {
+            formatTime(time) {
+                let date = new Date(time);
+                return formatDate(date, 'yyyy-MM-dd hh:mm:ss')
+            },
         }
     }
 </script>
-<style></style>
+<style scoped>
+    .app-container {
+        margin-top: 40px;
+        margin-left: 120px;
+        margin-right: 120px;
+    }
+</style>

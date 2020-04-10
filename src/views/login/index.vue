@@ -5,12 +5,13 @@
                      :model="loginForm"
                      :rules="loginRules"
                      ref="loginForm"
+                     style="margin: auto 20px"
                      label-position="left">
                 <div style="text-align: center">
                     <svg-icon icon-class="login" style="width: 56px;height: 56px;color: #409EFF"></svg-icon>
                 </div>
                 <h2 class="login-title color-main">TicketManageSystem</h2>
-                <el-form-item prop="username">
+                <el-form-item prop="username" required>
                     <el-input name="username"
                               type="text"
                               v-model="loginForm.username"
@@ -21,7 +22,7 @@
                         </span>
                     </el-input>
                 </el-form-item>
-                <el-form-item prop="password">
+                <el-form-item prop="password" required>
                     <el-input name="password"
                               :type="pwdType"
                               @keyup.enter.native="handleLogin"
@@ -34,16 +35,16 @@
                         <span slot="suffix" @click="showPwd">
                             <svg-icon icon-class="eye" class="color-main"></svg-icon>
                         </span>
-                        <el-form-item label="登录方式">
-                            <el-radio-group v-model="loginForm.admin">
-                                <el-radio label="admin"></el-radio>
-                                <el-radio label="normal"></el-radio>
-                            </el-radio-group>
-                        </el-form-item>
                     </el-input>
                 </el-form-item>
-                <el-form-item style="margin-bottom: 60px;text-align: center">
-                    <el-button style="width: 45%" type="primary" :loading="loading" @click.native.prevent="handleLogin">
+                <el-form-item label="登录方式" required>
+                    <el-radio-group v-model="loginForm.admin">
+                        <el-radio label="admin"></el-radio>
+                        <el-radio label="user"></el-radio>
+                    </el-radio-group>
+                </el-form-item>
+                <el-form-item style="margin-bottom: 40px;text-align: center">
+                    <el-button style="width: 45%" type="primary" :loading="loading" @click="handleLogin">
                         登录
                     </el-button>
                     <el-button style="width: 45%" :loading="loading" @click="handleRegister">
@@ -59,6 +60,7 @@
 <script>
     import {isvalidUsername} from '@/utils/validate';
     import login_center_bg from '@/assets/images/login_center_bg.png'
+    import {login} from '@/api/user'
 
     export default {
         name: 'login',
@@ -106,12 +108,19 @@
                 this.$refs.loginForm.validate(valid => {
                     if (valid) {
                         this.loading = true;
-                        this.$store.dispatch('Login', this.loginForm).then(() => {
-                            this.loading = false;
-                            this.$router.push({path: '/'})
-                        }).catch(() => {
-                            this.loading = false
-                        })
+                        let params = new URLSearchParams();
+                        params.append('username', this.loginForm.username);
+                        params.append('password', this.loginForm.password);
+                        params.append('admin', this.loginForm.admin);
+                        login(params).then(response => {
+                            this.$message(response.message);
+                        });
+                        this.loading = false;
+                        if(this.loginForm.admin === 'admin') {
+                            this.$router.push({path: '/admin'})
+                        } else {
+                            this.$router.push({path: '/user'})
+                        }
                     } else {
                         console.log('参数验证不合法！');
                         return false
@@ -131,7 +140,7 @@
         left: 0;
         right: 0;
         width: 360px;
-        margin: 140px auto;
+        margin: 100px auto;
         border-top: 10px solid #409EFF;
     }
 

@@ -70,3 +70,11 @@ export function userMessageBox() {
         method: 'get',
     })
 }
+
+// 获取用户已购机票列表
+export function userListOwnTickets() {
+    return request({
+        url: '/user/listOwnTickets',
+        method: 'get'
+    })
+}
