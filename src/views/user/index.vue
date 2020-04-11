@@ -131,7 +131,7 @@
             </div>
         </el-card>
 
-        <el-card class="operate-container" shadow="never" >
+        <el-card class="operate-container" shadow="never">
             <i class="el-icon-tickets"></i>
             <span>航班列表</span>
             <el-button
@@ -155,19 +155,19 @@
                 <el-table-column label="起飞地点" width="120px" align="center">
                     <template slot-scope="scope">{{scope.row.begin_place}}</template>
                 </el-table-column>
-                <el-table-column label="起飞时间" width="160px" align="center">
+                <el-table-column label="起飞时间" width="160px" align="center" sortable>
                     <template slot-scope="scope">{{scope.row.begin_time | formatTime}}</template>
                 </el-table-column>
                 <el-table-column label="降落地点" width="120px" align="center">
                     <template slot-scope="scope">{{scope.row.end_place}}</template>
                 </el-table-column>
-                <el-table-column label="降落时间" width="160px" align="center">
+                <el-table-column label="降落时间" width="160px" align="center" sortable>
                     <template slot-scope="scope">{{scope.row.end_time | formatTime}}</template>
                 </el-table-column>
-                <el-table-column label="余票" width="120" align="center">
+                <el-table-column label="余票" width="120" align="center" sortable>
                     <template slot-scope="scope">{{scope.row.remain}}</template>
                 </el-table-column>
-                <el-table-column label="票价" width="120" align="center">
+                <el-table-column label="票价" width="120" align="center" sortable>
                     <template slot-scope="scope">{{scope.row.price}}</template>
                 </el-table-column>
                 <el-table-column label="操作" align="center">
@@ -223,12 +223,64 @@
             <el-button type="primary" @click="message_box.dialogVisible = false">确 定</el-button>
         </span>
         </el-dialog>
+        <el-dialog
+                title="航班推荐"
+                :visible.sync="recommendList.dialogVisible"
+                width="80%">
+            <el-table ref="ticketTable"
+                      :data="recommendList.list"
+                      stripe
+                      style="width: 100%"
+                      :default-sort = "{prop: 'end_time', order: 'descending'}"
+                      border>
+                <el-table-column label="航班号" width="200px" align="center">
+                    <template slot-scope="scope">{{scope.row.flight_number}}</template>
+                </el-table-column>
+                <el-table-column label="起飞地点" width="120px" align="center">
+                    <template slot-scope="scope">{{scope.row.begin_place}}</template>
+                </el-table-column>
+                <el-table-column label="起飞时间" width="160px" align="center" prop="begin_time" sortable>
+                    <template slot-scope="scope">{{scope.row.begin_time | formatTime}}</template>
+                </el-table-column>
+                <el-table-column label="降落地点" width="120px" align="center">
+                    <template slot-scope="scope">{{scope.row.end_place}}</template>
+                </el-table-column>
+                <el-table-column label="降落时间" width="160px" align="center" prop="end_time" sortable>
+                    <template slot-scope="scope">{{scope.row.end_time | formatTime}}</template>
+                </el-table-column>
+                <el-table-column label="余票" width="120" align="center">
+                    <template slot-scope="scope">{{scope.row.remain}}</template>
+                </el-table-column>
+                <el-table-column label="票价"  align="center">
+                    <template slot-scope="scope">{{scope.row.price}}</template>
+                </el-table-column>
+                <el-table-column label="操作" width="400px" align="center">
+                    <template slot-scope="scope">
+                        <p>
+                            <el-button
+                                    size="medium"
+                                    type="info"
+                                    @click="handleFlyBy(scope.$index, scope.row)">经停
+                            </el-button>
+                            <el-button
+                                    size="medium"
+                                    type="primary"
+                                    @click="handlePurchase(scope.$index, scope.row)">购票
+                            </el-button>
+                        </p>
+                    </template>
+                </el-table-column>
+            </el-table>
+            <span slot="footer" class="dialog-footer">
+            <el-button type="primary" @click="recommendList.dialogVisible = false">确 定</el-button>
+            </span>
+        </el-dialog>
     </div>
 </template>
 
 <script>
-    import {userAppointment, userPurchase, userMessageBox, userListOwnTickets} from "@/api/user";
-    import {ticketRecommend, ticketSearch, ticketList} from "@/api/ticket";
+    import {userAppointment, userListOwnTickets, userMessageBox, userPurchase} from "@/api/user";
+    import {ticketList, ticketRecommend, ticketSearch} from "@/api/ticket";
     import {formatDate} from "@/utils/date";
     import {userCancelTicket} from "../../api/user";
 
@@ -241,7 +293,7 @@
                     0: '无效'
                 },
                 message_box: {
-                    dialogVisible:false,
+                    dialogVisible: false,
                     list: []
                 },
                 keyOptions: [{
@@ -310,6 +362,14 @@
                 },
                 begin_place: '',
                 end_place: '',
+                defaultRecommendList: {
+                    dialogVisible: false,
+                    list: [],
+                },
+                recommendList: {
+                    dialogVisible: false,
+                    list: [],
+                }
             }
         },
         created() {
@@ -344,6 +404,11 @@
                     }
                     ticketSearch(params).then(response => {
                         this.list = JSON.parse(response.data);
+                        let len = this.list.length;
+                        for (let i = 0; i < len; ++i) {
+                            this.list[i].begin_time = new Date(this.list[i].begin_time * 1000);
+                            this.list[i].end_time = new Date(this.list[i].end_time * 1000);
+                        }
                     });
                     this.searchQuery = this.defaultSearchQuery;
                 })
@@ -433,7 +498,7 @@
                     this.$prompt('请输入起点', '提示', {
                         confirmButtonText: '确定',
                         cancelButtonText: '取消',
-                    }).then(({ value }) => {
+                    }).then(({value}) => {
                         this.begin_place = value;
                         this.handleRecommend();
                     });
@@ -441,7 +506,7 @@
                     this.$prompt('请输入终点', '提示', {
                         confirmButtonText: '确定',
                         cancelButtonText: '取消',
-                    }).then(({ value }) => {
+                    }).then(({value}) => {
                         this.end_place = value;
                         this.handleRecommend();
                     });
@@ -458,17 +523,19 @@
                                 confirmButtonText: '确定',
                             });
                         } else {
-                            let msg = '';
+                            this.recommendList.list = recommend_list;
                             let len = recommend_list.length;
-                            for (let i = 0; i < len; i++) {
-                                msg += recommend_list[i] + '\n'
+                            for (let i = 0; i < len; ++i) {
+                                this.recommendList.list[i].begin_time = new Date(this.recommendList.list[i].begin_time * 1000);
+                                this.recommendList.list[i].end_time = new Date(this.recommendList.list[i].end_time * 1000);
                             }
-                            this.$alert('推荐航班为：\n' + msg, '推荐航班', {
-                                confirmButtonText: '确定',
-                            });
+                            this.recommendList.dialogVisible = true;
                         }
                     });
                 }
+            },
+            handleRecommendConfirm() {
+                this.recommendList = this.defaultRecommendList;
             },
             handleRefund(index, row) {
                 this.$confirm('是否确定要退票？', '提示', {
