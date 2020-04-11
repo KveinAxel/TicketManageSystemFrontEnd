@@ -114,13 +114,21 @@
                         params.append('admin', this.loginForm.admin);
                         login(params).then(response => {
                             this.$message(response.message);
-                        });
-                        this.loading = false;
-                        if(this.loginForm.admin === 'admin') {
-                            this.$router.push({path: '/admin'})
-                        } else {
-                            this.$router.push({path: '/user'})
-                        }
+                            this.loading = false;
+                            if(this.loginForm.admin === 'admin') {
+                                this.$router.push({path: '/admin'})
+                            } else {
+                                this.$router.push({path: '/user'})
+                            }
+                        }).catch(response => {
+                            this.loading = false;
+                            this.$message({
+                                message: response.message,
+                                type: 'warning'
+                            });
+
+                        })
+
                     } else {
                         console.log('参数验证不合法！');
                         return false

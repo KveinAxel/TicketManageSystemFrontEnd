@@ -20,6 +20,7 @@ router.beforeEach((to, from, next) => {
             next();
         }
     } else {
+        console.log('no cookie');
         if (whiteList.indexOf(to.path) !== -1) {
             next()
         } else {
