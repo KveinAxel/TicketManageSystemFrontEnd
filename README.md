@@ -7,9 +7,13 @@
 ## 如何使用
 
 1. 安装node.js
+
 2. `git clone git@github.com:KveinAxel/TicketManageSystemFrontEnd.git`
+
 3. `cd TicketManageSystemFrontEnd\`
+
 4. `npm install`
+
 5. `npm run dev`
 
 ## 本项目下的其他仓库

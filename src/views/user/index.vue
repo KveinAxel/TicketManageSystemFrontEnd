@@ -248,13 +248,13 @@
                 <el-table-column label="降落时间" width="160px" align="center" prop="end_time" sortable>
                     <template slot-scope="scope">{{scope.row.end_time | formatTime}}</template>
                 </el-table-column>
-                <el-table-column label="余票" width="120" align="center">
+                <el-table-column label="余票" width="120" align="center" sortable>
                     <template slot-scope="scope">{{scope.row.remain}}</template>
                 </el-table-column>
-                <el-table-column label="票价"  align="center">
+                <el-table-column label="票价"  align="center" sortable>
                     <template slot-scope="scope">{{scope.row.price}}</template>
                 </el-table-column>
-                <el-table-column label="操作" width="400px" align="center">
+                <el-table-column label="操作" width="200px" align="center">
                     <template slot-scope="scope">
                         <p>
                             <el-button
